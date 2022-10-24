@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
@@ -7,7 +8,7 @@ import * as chaiHttp from 'chai-http';
 
 import { app } from '../app';
 import Users from '../database/models/UsersModel';
-import { bodyMock, jwtMock, loginBodyMock, userMock } from './mocks/login.mock';
+import { bodyMessageMock, bodyMock, jwtMock, loginBodyMock, userMock } from './mocks/login.mock';
 
 chai.use(chaiHttp);
 
@@ -33,7 +34,7 @@ describe('Login route test', () => {
         .post('/login')
         .send(loginBodyMock);
 
-      expect(chaiHttpResponse.status).to.be.equal(200);
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
     });
 
     it('Should return json { token: \' ...\' }', async () => {
@@ -43,6 +44,28 @@ describe('Login route test', () => {
         .send(loginBodyMock);
 
       expect(chaiHttpResponse.body).to.deep.equal(bodyMock);
+    });
+  });
+
+  describe('When the request is invalid', () => {
+    afterEach(sinon.restore);
+
+    it('Should return status 400 when email is undefined', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send({ password: loginBodyMock.password });
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.BAD_REQUEST);
+    });
+
+    it('Should return json { message: \' ...\' } when email is undefined', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send({ password: loginBodyMock.password });
+
+      expect(chaiHttpResponse.body).to.deep.equal(bodyMessageMock);
     });
   });
 });

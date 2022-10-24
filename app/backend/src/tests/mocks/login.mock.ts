@@ -16,3 +16,7 @@ export const jwtMock = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWw
 export const bodyMock = {
   token: jwtMock,
 };
+
+export const bodyMessageMock = {
+  message: 'All fields must be filled',
+};
