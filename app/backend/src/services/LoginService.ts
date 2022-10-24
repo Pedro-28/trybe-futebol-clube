@@ -1,7 +1,10 @@
 import * as bcrypt from 'bcryptjs';
+import { StatusCodes } from 'http-status-codes';
+
 import Token from '../utils/Token';
 import Users from '../database/models/UsersModel';
 import ILoginDTO from '../interfaces/LoginInterface';
+import CustomError from '../utils/CustomError';
 
 export default class LoginService {
   static async login({ email, password }: ILoginDTO) {
@@ -10,11 +13,13 @@ export default class LoginService {
     });
 
     if (!user) {
-      throw new Error('');
+      throw new CustomError(StatusCodes.UNAUTHORIZED, 'Incorrect email or password');
     }
 
-    if (await !bcrypt.compare(password, user.password)) {
-      throw new Error('');
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      throw new CustomError(StatusCodes.UNAUTHORIZED, 'Incorrect email or password');
     }
 
     return Token.tokenGenerate(user);

@@ -8,7 +8,10 @@ import * as chaiHttp from 'chai-http';
 
 import { app } from '../app';
 import Users from '../database/models/UsersModel';
-import { bodyMessageMock, bodyMock, jwtMock, loginBodyMock, userMock } from './mocks/login.mock';
+import {
+  undefinedFieldsMessageMock, bodyMock, jwtMock, loginBodyMock,
+  userMock, incorrectFieldsMessageMock, incorrectLoginBodyMock
+} from './mocks/login.mock';
 
 chai.use(chaiHttp);
 
@@ -65,7 +68,7 @@ describe('Login route test', () => {
         .post('/login')
         .send({ password: loginBodyMock.password });
 
-      expect(chaiHttpResponse.body).to.deep.equal(bodyMessageMock);
+      expect(chaiHttpResponse.body).to.deep.equal(undefinedFieldsMessageMock);
     });
 
     it('Should return status 400 when password is undefined', async () => {
@@ -83,7 +86,59 @@ describe('Login route test', () => {
         .post('/login')
         .send({ email: loginBodyMock.email });
 
-      expect(chaiHttpResponse.body).to.deep.equal(bodyMessageMock);
+      expect(chaiHttpResponse.body).to.deep.equal(undefinedFieldsMessageMock);
+    });
+
+    it('Should return status 401 when email is incorrect', async () => {
+      sinon
+        .stub(Users, "findOne")
+        .resolves(null);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send(incorrectLoginBodyMock);
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('Should return json { message: \'...\' } when email is incorrect', async () => {
+      sinon
+        .stub(Users, "findOne")
+        .resolves(null);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send(incorrectLoginBodyMock);
+
+      expect(chaiHttpResponse.body).to.deep.equal(incorrectFieldsMessageMock);
+    });
+
+    it('Should return status 401 when password is incorrect', async () => {
+      sinon
+        .stub(Users, "findOne")
+        .resolves(userMock as Users);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send(incorrectLoginBodyMock);
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.UNAUTHORIZED);
+    });
+
+    it('Should return json { message: \'...\' } when password is incorrect', async () => {
+      sinon
+        .stub(Users, "findOne")
+        .resolves(userMock as Users);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send(incorrectLoginBodyMock);
+
+      expect(chaiHttpResponse.body).to.deep.equal(incorrectFieldsMessageMock);
     });
   });
 });

@@ -17,6 +17,15 @@ export const bodyMock = {
   token: jwtMock,
 };
 
-export const bodyMessageMock = {
+export const undefinedFieldsMessageMock = {
   message: 'All fields must be filled',
 };
+
+export const incorrectFieldsMessageMock = {
+  message: 'Incorrect email or password',
+};
+
+export const incorrectLoginBodyMock = {
+  email: 'incorrect@incorrect.com',
+  password: 'incorrect_secret'
+}
