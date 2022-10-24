@@ -37,7 +37,7 @@ describe('Login route test', () => {
       expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
     });
 
-    it('Should return json { token: \' ...\' }', async () => {
+    it('Should return json { token: \'...\' }', async () => {
       const chaiHttpResponse = await chai
         .request(app)
         .post('/login')
@@ -59,11 +59,29 @@ describe('Login route test', () => {
       expect(chaiHttpResponse.status).to.be.equal(StatusCodes.BAD_REQUEST);
     });
 
-    it('Should return json { message: \' ...\' } when email is undefined', async () => {
+    it('Should return json { message: \'...\' } when email is undefined', async () => {
       const chaiHttpResponse = await chai
         .request(app)
         .post('/login')
         .send({ password: loginBodyMock.password });
+
+      expect(chaiHttpResponse.body).to.deep.equal(bodyMessageMock);
+    });
+
+    it('Should return status 400 when password is undefined', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send({ email: loginBodyMock.email });
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.BAD_REQUEST);
+    });
+
+    it('Should return json { message: \'...\' } when password is undefined', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/login')
+        .send({ email: loginBodyMock.email });
 
       expect(chaiHttpResponse.body).to.deep.equal(bodyMessageMock);
     });
