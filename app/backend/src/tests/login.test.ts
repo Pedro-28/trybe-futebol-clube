@@ -10,7 +10,8 @@ import { app } from '../app';
 import Users from '../database/models/UsersModel';
 import {
   undefinedFieldsMessageMock, bodyMock, jwtMock, loginBodyMock,
-  userMock, incorrectFieldsMessageMock, incorrectLoginBodyMock, payloadMock, tokenNotFoundMock, invalidtokenMock, unknownUserMock
+  userMock, incorrectFieldsMessageMock, incorrectLoginBodyMock,
+  payloadMock, tokenNotFoundMock, invalidtokenMock, unknownUserMock
 } from './mocks/login.mock';
 
 chai.use(chaiHttp);
