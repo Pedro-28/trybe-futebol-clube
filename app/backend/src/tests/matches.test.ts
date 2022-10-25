@@ -6,19 +6,19 @@ import * as chai from 'chai';
 import * as chaiHttp from 'chai-http';
 
 import { app } from '../app';
-import Teams from '../database/models/TeamsModel';
-import { teamsMock } from './mocks/teams.mock';
+import Matches from '../database/models/MatchesModel';
+import { matchesMock } from './mocks/matches.mock';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Teams route test', () => {
-  describe('/teams when successful', () => {
+describe('Matches route test', () => {
+  describe('/matches when successful', () => {
     beforeEach(async () => {
       sinon
-        .stub(Teams, 'findAll')
-        .resolves(teamsMock as Teams[]);
+        .stub(Matches, 'findAll')
+        .resolves(matchesMock as any);
     });
 
     afterEach(sinon.restore);
@@ -26,7 +26,7 @@ describe('Teams route test', () => {
     it('Should return status 200', async () => {
       const chaiHttpResponse = await chai
         .request(app)
-        .get('/teams');
+        .get('/matches');
 
       expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
     });
@@ -34,17 +34,17 @@ describe('Teams route test', () => {
     it('Should return json [...]', async () => {
       const chaiHttpResponse = await chai
         .request(app)
-        .get('/teams');
+        .get('/matches');
 
-      expect(chaiHttpResponse.body).to.deep.equal(teamsMock);
+      expect(chaiHttpResponse.body).to.deep.equal(matchesMock);
     });
   });
 
-  describe('/teams/:id when successful', () => {
+  describe('/matches?inProgress=true when successful', () => {
     beforeEach(async () => {
       sinon
-        .stub(Teams, 'findByPk')
-        .resolves(teamsMock[0] as Teams);
+        .stub(Matches, 'findAll')
+        .resolves([matchesMock[1]] as any);
     });
 
     afterEach(sinon.restore);
@@ -52,17 +52,17 @@ describe('Teams route test', () => {
     it('Should return status 200', async () => {
       const chaiHttpResponse = await chai
         .request(app)
-        .get('/teams/1');
+        .get('/matches?inProgress=true');
 
       expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
     });
 
-    it('Should return json {...}', async () => {
+    it('Should return json [...]', async () => {
       const chaiHttpResponse = await chai
         .request(app)
-        .get('/teams/1');
+        .get('/matches?inProgress=true');
 
-      expect(chaiHttpResponse.body).to.deep.equal(teamsMock[0]);
+      expect(chaiHttpResponse.body).to.deep.equal([matchesMock[1]]);
     });
   });
 });

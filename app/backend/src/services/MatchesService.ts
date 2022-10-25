@@ -14,4 +14,16 @@ export default class MatchesService {
 
     return matches;
   }
+
+  public async getInProgressMatches(inProgress: boolean) {
+    const matches = await this.model.findAll({
+      where: { inProgress },
+      include: [
+        { model: Teams, attributes: { exclude: ['id'] }, as: 'teamHome' },
+        { model: Teams, attributes: { exclude: ['id'] }, as: 'teamAway' },
+      ],
+    });
+
+    return matches;
+  }
 }

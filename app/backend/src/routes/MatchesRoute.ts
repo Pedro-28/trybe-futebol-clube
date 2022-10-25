@@ -13,6 +13,7 @@ export default class MatchesRoute {
   }
 
   private config(): void {
+    this._routes.get('/', this.controller.getInProgressMatches);
     this._routes.get('/', this.controller.getAllMatches);
   }
 
