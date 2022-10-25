@@ -29,3 +29,20 @@ export const incorrectLoginBodyMock = {
   email: 'incorrect@incorrect.com',
   password: 'incorrect_secret'
 }
+
+export const payloadMock = {
+  id: userMock.email,
+  email: userMock.id,
+}
+
+export const tokenNotFoundMock = {
+  message: 'Token not found',
+};
+
+export const invalidtokenMock = {
+  message: 'Token must be a valid token',
+};
+
+export const unknownUserMock = {
+  message: 'Unknown user',
+};

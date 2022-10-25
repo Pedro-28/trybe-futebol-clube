@@ -1,20 +1,27 @@
 import { Router } from 'express';
-import IValidationMiddleware from '../interfaces/ValidationMiddleware';
+import LoginMiddleware from '../middlewares/LoginMiddleware';
 import LoginController from '../controllers/LoginController';
+import LoginService from '../services/LoginService';
+import { ILoginValidationMiddleware } from '../interfaces/LoginInterface';
 
 export default class LoginRoute {
   private _routes: Router;
-  private middleware: IValidationMiddleware;
+  private middleware: ILoginValidationMiddleware;
+  private controller: LoginController;
 
-  constructor(middleware: IValidationMiddleware) {
+  constructor() {
     this._routes = Router();
-    this.middleware = middleware;
+    this.middleware = new LoginMiddleware();
+    this.controller = new LoginController(new LoginService());
     this.config();
   }
 
   private config(): void {
-    const { validateBody } = this.middleware;
-    this._routes.post('/', validateBody, LoginController.login);
+    const { validateToken, validateBody } = this.middleware;
+
+    this._routes.get('/validate', validateToken, this.controller.getRole);
+
+    this._routes.post('/', validateBody, this.controller.login);
   }
 
   get routes() {

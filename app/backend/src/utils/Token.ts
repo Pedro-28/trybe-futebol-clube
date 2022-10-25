@@ -15,4 +15,9 @@ export default class Token {
 
     return token;
   }
+
+  static tokenVerify(token: string): string | jwt.JwtPayload {
+    const payload = jwt.verify(token, JWT_SECRET);
+    return payload;
+  }
 }

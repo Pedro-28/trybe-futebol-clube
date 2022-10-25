@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import LoginMiddleware from '../middlewares/LoginMiddleware';
 import LoginRoute from './LoginRoute';
 import 'express-async-errors';
 
@@ -12,7 +11,7 @@ export default class Routes {
   }
 
   private config(): void {
-    const loginRoute = new LoginRoute(new LoginMiddleware());
+    const loginRoute = new LoginRoute();
 
     this._routes.use('/login', loginRoute.routes);
   }

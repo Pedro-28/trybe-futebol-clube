@@ -3,12 +3,14 @@ import { StatusCodes } from 'http-status-codes';
 
 import Token from '../utils/Token';
 import Users from '../database/models/UsersModel';
-import ILoginDTO from '../interfaces/LoginInterface';
+import { ILoginDTO } from '../interfaces/LoginInterface';
 import CustomError from '../utils/CustomError';
 
 export default class LoginService {
-  static async login({ email, password }: ILoginDTO) {
-    const user = await Users.findOne({
+  private model = Users;
+
+  public async login({ email, password }: ILoginDTO) {
+    const user = await this.model.findOne({
       where: { email },
     });
 
@@ -23,5 +25,15 @@ export default class LoginService {
     }
 
     return Token.tokenGenerate(user);
+  }
+
+  public async getRole(id: number) {
+    const user = await this.model.findByPk(id);
+
+    if (!user) {
+      throw new CustomError(StatusCodes.FAILED_DEPENDENCY, 'Unknown user');
+    }
+
+    return user.role;
   }
 }
