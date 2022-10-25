@@ -13,6 +13,8 @@ export default class TeamsRoute {
   }
 
   private config(): void {
+    this._routes.get('/:id', this.controller.getTeamById);
+
     this._routes.get('/', this.controller.getAllTeams);
   }
 
