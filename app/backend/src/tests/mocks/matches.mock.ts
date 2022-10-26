@@ -50,6 +50,12 @@ export const matchBodyMock = {
   awayTeamGoals: 2,
 };
 
+export const sameMatchBodyMock = {
+  ...matchBodyMock,
+  homeTeam: 8,
+  awayTeam: 8,
+};
+
 export const payloadMock = {
   id: 1,
   email: 'admin@admin.com',
@@ -71,4 +77,31 @@ export const undefinedFieldsMessageMock = {
 
 export const finishMessageMock = {
   message: 'Finished',
+};
+
+export const unknownTeamMessageMock = {
+  message: 'There is no team with such id!',
+};
+
+export const teamMock = {
+  id: 1,
+  teamName: 'Avaí/Kindermann'
+};
+
+export const sameMatchesMessageMock = {
+  message: 'It is not possible to create a match with two equal teams',
+};
+
+export const updateMatchBodyMock = {
+  homeTeamGoals: 3,
+  awayTeamGoals: 1
+};
+
+export const updateMatchMock = {
+  ...createMatchMock,
+  ...updateMatchBodyMock
+};
+
+export const updateMessageMock = {
+  message: 'Updated',
 };

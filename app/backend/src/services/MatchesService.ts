@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import Teams from '../database/models/TeamsModel';
 import Matches from '../database/models/MatchesModel';
 import CustomError from '../utils/CustomError';
+import IUpdateMatch from '../interfaces/MatchesInterface';
 
 export default class MatchesService {
   private model = Matches;
@@ -57,5 +58,9 @@ export default class MatchesService {
 
   public async finish(id: string) {
     await this.model.update({ inProgress: false }, { where: { id } });
+  }
+
+  public async updateInProgressMatches({ homeTeamGoals, awayTeamGoals }: IUpdateMatch, id: string) {
+    await this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
   }
 }

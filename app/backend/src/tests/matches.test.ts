@@ -8,9 +8,12 @@ import * as chaiHttp from 'chai-http';
 
 import { app } from '../app';
 import Matches from '../database/models/MatchesModel';
+import Teams from '../database/models/TeamsModel';
 import {
   createMatchMock, finishMatchMock, finishMessageMock, invalidtokenMock, jwtMock,
-  matchBodyMock, matchesMock, payloadMock, tokenNotFoundMock, undefinedFieldsMessageMock
+  matchBodyMock, matchesMock, payloadMock, sameMatchBodyMock, sameMatchesMessageMock,
+  teamMock, tokenNotFoundMock, undefinedFieldsMessageMock, unknownTeamMessageMock,
+  updateMatchBodyMock, updateMatchMock, updateMessageMock
 } from './mocks/matches.mock';
 
 chai.use(chaiHttp);
@@ -166,6 +169,78 @@ describe('Matches route test', () => {
 
       expect(chaiHttpResponse.body).to.deep.equal(undefinedFieldsMessageMock);
     });
+
+    it('Should return status 404 when team is unknown', async () => {
+      sinon
+        .stub(jwt, 'verify')
+        .resolves(payloadMock);
+
+      sinon
+        .stub(Teams, 'findByPk')
+        .resolves(null);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/matches')
+        .send(matchBodyMock)
+        .set('Authorization', jwtMock);
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.NOT_FOUND);
+    });
+
+    it('Should return json { message: \'...\' } when team is unknown', async () => {
+      sinon
+        .stub(jwt, 'verify')
+        .resolves(payloadMock);
+
+      sinon
+        .stub(Teams, 'findByPk')
+        .resolves(null);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/matches')
+        .send(matchBodyMock)
+        .set('Authorization', jwtMock);
+
+      expect(chaiHttpResponse.body).to.deep.equal(unknownTeamMessageMock);
+    });
+
+    it('Should return status 422 when matches are equal', async () => {
+      sinon
+        .stub(jwt, 'verify')
+        .resolves(payloadMock);
+
+      sinon
+        .stub(Teams, 'findByPk')
+        .resolves(teamMock as Teams);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/matches')
+        .send(sameMatchBodyMock)
+        .set('Authorization', jwtMock);
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.UNPROCESSABLE_ENTITY);
+    });
+
+    it('Should return json { message: \'...\' } when matches are equal', async () => {
+      sinon
+        .stub(jwt, 'verify')
+        .resolves(payloadMock);
+
+      sinon
+        .stub(Teams, 'findByPk')
+        .resolves(teamMock as Teams);
+
+      const chaiHttpResponse = await chai
+        .request(app)
+        .post('/matches')
+        .send(sameMatchBodyMock)
+        .set('Authorization', jwtMock);
+
+      expect(chaiHttpResponse.body).to.deep.equal(sameMatchesMessageMock);
+    });
   });
 
   describe('PATCH /matches/:id/finish when successful', () => {
@@ -191,6 +266,34 @@ describe('Matches route test', () => {
         .patch('/matches/1/finish');
 
       expect(chaiHttpResponse.body).to.deep.equal(finishMessageMock);
+    });
+  });
+
+  describe('PATCH /matches/:id when successful', () => {
+    beforeEach(async () => {
+      sinon
+        .stub(Matches, 'update')
+        .resolves(updateMatchMock as any);
+    });
+
+    afterEach(sinon.restore);
+
+    it('Should return status 200', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .patch('/matches/1')
+        .send(updateMatchBodyMock);
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
+    });
+
+    it('Should return json {...}', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .patch('/matches/1')
+        .send(updateMatchBodyMock);
+
+      expect(chaiHttpResponse.body).to.deep.equal(updateMessageMock);
     });
   });
 });

@@ -20,6 +20,7 @@ export default class MatchesRoute {
     const { validateToken, validateBody } = this.middleware;
 
     this._routes.patch('/:id/finish', this.controller.finish);
+    this._routes.patch('/:id', this.controller.updateInProgressMatches);
 
     this._routes.post('/', validateToken, validateBody, this.controller.insert);
 
