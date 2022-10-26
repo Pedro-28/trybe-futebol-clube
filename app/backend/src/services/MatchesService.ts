@@ -33,6 +33,16 @@ export default class MatchesService {
   public async insert(newMatch: Matches) {
     const { homeTeam, awayTeam } = newMatch;
 
+    const teamsIds = [homeTeam, awayTeam];
+    const teams = await Promise.all(teamsIds.map((id) => Teams.findByPk(id)));
+
+    if (teams.some((team) => team === null)) {
+      throw new CustomError(
+        StatusCodes.NOT_FOUND,
+        'There is no team with such id!',
+      );
+    }
+
     if (homeTeam === awayTeam) {
       throw new CustomError(
         StatusCodes.UNPROCESSABLE_ENTITY,
