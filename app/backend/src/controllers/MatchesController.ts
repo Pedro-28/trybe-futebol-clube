@@ -28,4 +28,12 @@ export default class MatchesController {
 
     res.status(StatusCodes.CREATED).json(match);
   };
+
+  public finish = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    await this.service.finish(id);
+
+    res.status(StatusCodes.OK).json({ message: 'Finished' });
+  };
 }

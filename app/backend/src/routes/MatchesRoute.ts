@@ -18,6 +18,9 @@ export default class MatchesRoute {
 
   private config(): void {
     const { validateToken, validateBody } = this.middleware;
+
+    this._routes.patch('/:id/finish', this.controller.finish);
+
     this._routes.post('/', validateToken, validateBody, this.controller.insert);
 
     this._routes.get('/', this.controller.getInProgressMatches);

@@ -9,8 +9,8 @@ import * as chaiHttp from 'chai-http';
 import { app } from '../app';
 import Matches from '../database/models/MatchesModel';
 import {
-  createMatchMock, invalidtokenMock, jwtMock, matchBodyMock,
-  matchesMock, payloadMock, tokenNotFoundMock, undefinedFieldsMessageMock
+  createMatchMock, finishMatchMock, finishMessageMock, invalidtokenMock, jwtMock,
+  matchBodyMock, matchesMock, payloadMock, tokenNotFoundMock, undefinedFieldsMessageMock
 } from './mocks/matches.mock';
 
 chai.use(chaiHttp);
@@ -165,6 +165,32 @@ describe('Matches route test', () => {
         .set('Authorization', jwtMock);;
 
       expect(chaiHttpResponse.body).to.deep.equal(undefinedFieldsMessageMock);
+    });
+  });
+
+  describe('PATCH /matches/:id/finish when successful', () => {
+    beforeEach(async () => {
+      sinon
+        .stub(Matches, 'update')
+        .resolves(finishMatchMock as any);
+    });
+
+    afterEach(sinon.restore);
+
+    it('Should return status 200', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .patch('/matches/1/finish');
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
+    });
+
+    it('Should return json {...}', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .patch('/matches/1/finish');
+
+      expect(chaiHttpResponse.body).to.deep.equal(finishMessageMock);
     });
   });
 });
