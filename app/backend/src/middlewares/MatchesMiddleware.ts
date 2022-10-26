@@ -5,11 +5,11 @@ import Token from '../utils/Token';
 import CustomError from '../utils/CustomError';
 import IValidationMiddleware from '../interfaces/ValidationMiddleware';
 
-export default class LoginMiddleware implements IValidationMiddleware {
+export default class MatchesMiddleware implements IValidationMiddleware {
   public validateBody = (req: Request, _res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = req.body;
 
-    if (!email || !password) {
+    if (!homeTeam || !awayTeam || !homeTeamGoals || !awayTeamGoals) {
       throw new CustomError(StatusCodes.BAD_REQUEST, 'All fields must be filled');
     }
 
@@ -24,8 +24,7 @@ export default class LoginMiddleware implements IValidationMiddleware {
     }
 
     try {
-      const payload = Token.tokenVerify(authorization);
-      req.body = payload;
+      Token.tokenVerify(authorization);
 
       next();
     } catch {

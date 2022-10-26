@@ -31,8 +31,8 @@ export const incorrectLoginBodyMock = {
 }
 
 export const payloadMock = {
-  id: userMock.email,
-  email: userMock.id,
+  id: userMock.id,
+  email: userMock.email,
 }
 
 export const tokenNotFoundMock = {

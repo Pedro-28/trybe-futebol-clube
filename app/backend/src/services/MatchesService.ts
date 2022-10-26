@@ -26,4 +26,10 @@ export default class MatchesService {
 
     return matches;
   }
+
+  public async insert(newMatch: Matches) {
+    const match = await this.model.create({ ...newMatch, inProgress: true });
+
+    return match;
+  }
 }

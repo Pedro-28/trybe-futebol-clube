@@ -2,11 +2,11 @@ import { Router } from 'express';
 import LoginMiddleware from '../middlewares/LoginMiddleware';
 import LoginController from '../controllers/LoginController';
 import LoginService from '../services/LoginService';
-import { ILoginValidationMiddleware } from '../interfaces/LoginInterface';
+import IValidationMiddleware from '../interfaces/ValidationMiddleware';
 
 export default class LoginRoute {
   private _routes: Router;
-  private middleware: ILoginValidationMiddleware;
+  private middleware: IValidationMiddleware;
   private controller: LoginController;
 
   constructor() {

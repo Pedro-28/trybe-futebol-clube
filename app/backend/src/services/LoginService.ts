@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 
 import Token from '../utils/Token';
 import Users from '../database/models/UsersModel';
-import { ILoginDTO } from '../interfaces/LoginInterface';
+import ILoginDTO from '../interfaces/LoginInterface';
 import CustomError from '../utils/CustomError';
 
 export default class LoginService {

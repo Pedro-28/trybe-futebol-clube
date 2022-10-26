@@ -22,4 +22,10 @@ export default class MatchesController {
 
     res.status(StatusCodes.OK).json(matches);
   };
+
+  public insert = async (req: Request, res: Response) => {
+    const match = await this.service.insert(req.body);
+
+    res.status(StatusCodes.CREATED).json(match);
+  };
 }
