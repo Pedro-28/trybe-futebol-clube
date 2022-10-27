@@ -7,7 +7,7 @@ import * as chaiHttp from 'chai-http';
 
 import { app } from '../app';
 import Sequelize from '../database/models';
-import { homeLeaderboardMock } from './mocks/leaderboard.mock';
+import { awayLeaderboardMock, homeLeaderboardMock } from './mocks/leaderboard.mock';
 
 chai.use(chaiHttp);
 
@@ -37,6 +37,32 @@ describe('Leaderboard route test', () => {
         .get('/leaderboard/home');
 
       expect(chaiHttpResponse.body).to.deep.equal(homeLeaderboardMock[1]);
+    });
+  });
+
+  describe('/leaderboard/away when successful', () => {
+    beforeEach(async () => {
+      sinon
+        .stub(Sequelize, 'query')
+        .resolves(awayLeaderboardMock as any);
+    });
+
+    afterEach(sinon.restore);
+
+    it('Should return status 200', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .get('/leaderboard/away');
+
+      expect(chaiHttpResponse.status).to.be.equal(StatusCodes.OK);
+    });
+
+    it('Should return json [...]', async () => {
+      const chaiHttpResponse = await chai
+        .request(app)
+        .get('/leaderboard/away');
+
+      expect(chaiHttpResponse.body).to.deep.equal(awayLeaderboardMock[1]);
     });
   });
 });
