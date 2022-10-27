@@ -15,6 +15,7 @@ export default class LeaderboardRoute {
   private config(): void {
     this._routes.get('/home', this.controller.getHomeLeaderboard);
     this._routes.get('/away', this.controller.getAwayLeaderboard);
+    this._routes.get('/', this.controller.getLeaderboard);
   }
 
   get routes() {

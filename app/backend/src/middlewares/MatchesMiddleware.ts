@@ -8,8 +8,9 @@ import IValidationMiddleware from '../interfaces/ValidationMiddleware';
 export default class MatchesMiddleware implements IValidationMiddleware {
   public validateBody = (req: Request, _res: Response, next: NextFunction) => {
     const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = req.body;
+    const matchFields = [homeTeam, awayTeam, homeTeamGoals, awayTeamGoals];
 
-    if (!homeTeam || !awayTeam || !homeTeamGoals || !awayTeamGoals) {
+    if (matchFields.some((field) => field === undefined && field !== 0)) {
       throw new CustomError(StatusCodes.BAD_REQUEST, 'All fields must be filled');
     }
 
